@@ -8,9 +8,11 @@ from bs4 import BeautifulSoup
 from pprint import pprint
 
 
-class Obtainer:
+class Obtainer():
     def __init__(self, base_url, idx):
+        self.idx = idx if idx else 0
         self.base_url = base_url
+
         self.base_html = BeautifulSoup(
             requests.get(self.base_url).content,
             "html.parser"
@@ -18,15 +20,20 @@ class Obtainer:
 
         self.tequilaName = self.base_html.findAll("h1", itemprop="name")[0].text.replace("\n", "")
 
-        self.idx = idx if idx else 0
-
+    def run(self):
         self.reviewerData = self.tequilaReviews()
         self.tequilaData = self.getTequilaDetails()
         self.communityData = self.getCommunityDetails()
 
+        print(
+            f"Site for {self.tequilaName} scraped!\n"
+        )
+
+        return
+
     def getReviewerData(self, review_html, name="Tequila"):
         """Pick out the needed data fields from a review."""
-        # Get reviewer name and level of seniority
+        # Get reviwer name and level of seniority
 
         reviewer_name = review_html.find("div", itemprop="author").text.replace("\n", "")
         reviewer_level = review_html.find("div", class_="comment__user-level").text.replace("\n", "")
@@ -62,7 +69,6 @@ class Obtainer:
         }
         return reviewer_data
 
-
     def allReviews(self, html, name="Tequila"):
         """Pick out required data fields for all reviews on a page."""
 
@@ -80,7 +86,6 @@ class Obtainer:
         )
 
         return data, self.idx + len(review_dicts)
-
 
     def tequilaReviews(self, ):
         """Pick out required data fields for all reviews, for all review pages."""
@@ -120,27 +125,23 @@ class Obtainer:
 
         return final_reviews
 
-
     def getTequilaDetails(self):
         """Pick out tequila bottle chracteristics."""
 
-        name = self.base_html.findAll("h1", itemprop="name")[0].text
-        name = name.replace("\n", "")
+        table = self.base_html.findAll("div", itemprop="description")[0]
 
-        d = self.base_html.findAll("div", itemprop="description")[0]
-
-        ids = d.find_all("th", scope="row")
+        ids = table.find_all("th", scope="row")
         ids = list(map(lambda x: x.text.replace("\n", "").replace(":", ""), ids))
         ids = ["Tequila"] + ids
 
-        vals = d.find_all("td")
+        vals = table.find_all("td")
         vals = list(map(lambda x: x.text.replace("\n", ""), vals))
         vals = list(map(lambda x: x[:-1] if x[-1] == "," else x, vals))
+
         vals[0] = int(vals[0]) if vals[0].isdigit() else vals[0]
-        vals = [name] + vals
+        vals = [self.tequilaName] + vals
 
         return dict(zip(ids, vals))
-
 
     def getCommunityDetails(self, kind="aromas"):
 
