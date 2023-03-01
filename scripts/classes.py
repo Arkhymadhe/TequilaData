@@ -191,9 +191,8 @@ class Obtainer:
         ):
             if urls is None:
                 urls = list()
-                self.page_num = page_num
-                self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila"
-                self.url = self.pattern.format(self.page_num)
+                self.webHunter = WebHunter()
+                self.webHunter.run()
 
                 end = False
 
@@ -228,21 +227,20 @@ class Obtainer:
 
 
 class PageHunter:
-    def __init__(self, url, page_num=0):
+    def __init__(self, url,):
         self.links = list()
         self.url=url
         self.maxPage = None
-        self.page_num = page_num
         self.session = HTMLSession()
         return
 
-    def getPage(self):
+    def getLinks(self):
         response = self.session.get(self.url)
         response.html.render(sleep=1)
 
         links = list(response.html.xpath('//*[@id="hits"]/div', first=True).absolute_links)
 
-        return links
+        return links, response
 
     def getMaxPage(self, response):
         num_list = response.html.xpath('//*[@id="pagination"]/div/ul/li')
@@ -254,13 +252,19 @@ class PageHunter:
 
         return
 
-    def run(self):
-        self.links = self.getPage()
+    def run(self, set_max=False):
+        self.links, _ = self.getLinks()
+
+        if len(self.links) == 0:
+            return
+
+        if set_max:
+            self.getMaxPage(_)
         return
 
-    def rerun(self, url):
+    def rerun(self, url, set_max=False):
         self.setUrl(url)
-        self.run()
+        self.run(set_max)
         return
 
     def setUrl(self, url):
@@ -271,36 +275,69 @@ class PageHunter:
         self.links.clear()
         return
 
+    def cache_empty(self):
+        return True if len(self.links) == 0 else False
+
 
 class WebHunter(PageHunter):
     index = 0
-    allLinks = list()
+    allLinks = dict()
 
-    def __init__(self, page_num=0):
-
-        self.page_num = page_num
+    def __init__(self,):
         self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila"
 
         self.pageHunter = PageHunter(self.pattern)
-        self.url = self.pattern.format(self.page_num)
+        self.url = self.pattern.format(self.index)
 
         super(WebHunter, self).__init__(self.url)
 
-        self.pageHunter.run()
+        self.pageHunter.run(set_max = True)
 
         self.commit()
+        self.persist(mode="w")
 
         return
 
     def getSite(self):
-        self.pageHunter.rerun(url)
+        set_max = False
+
+        for i in range(self.index, self.pageHunter.maxPage):
+            self.url = self.pattern.format(i)
+
+            if i == self.pageHunter.maxPage - 1:
+                set_max = True
+
+            self.pageHunter.rerun(self.url, set_max)
+
+            if self.pageHunter.cache_empty():
+                self.index = i
+                break
+
+            self.commit()
+
+        self.index = i
         return
 
     def run(self):
+
+        while True:
+            self.getSite()
+            if self.pageHunter.cache_empty():
+                break
+
+        print(
+            "Entire site scraped!"
+        )
         return
 
-    def commit(self):
-        self.allLinks.extend(self.pageHunter.links)
+    def commit(self, mode="a"):
+        try:
+            self.allLinks[self.index].extend(self.pageHunter.links)
+        except:
+            self.allLinks[self.index] = self.pageHunter.links
+
+        self.persist(mode=mode)
+
         self.pageHunter.clear()
 
         print(
@@ -308,6 +345,19 @@ class WebHunter(PageHunter):
             "PageHunter instance cleared!\n"
         )
         return
+
+    def persist(self, fname="links.json", mode="a"):
+        with open(fname, mode) as f:
+            json.dump(self.allLinks, f)
+
+            f.close()
+        return
+
+
+
+hunter = WebHunter()
+
+hunter.run()
 
 
 
