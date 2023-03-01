@@ -166,3 +166,59 @@ class Obtainer():
         taste_profile = dict(zip(flavours, flavours_vals))
 
         return taste_profile
+
+    def clear(self):
+        self.reviewerData.clear()
+        self.tequilaData.clear()
+
+        self.communityData.clear()
+
+        print(
+            "All cached data cleared!\n"
+        )
+        return
+
+    class MegaObtainer(Obtainer):
+        def __init__(
+                self,
+                page_num=0,
+                urls=None
+        ):
+            if urls is None:
+                self.page_num = page_num
+                self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila",
+                self.url = self.pattern.format(self.page_num)
+
+            self.reviewerData = self.tequilaReviews()
+            self.tequilaData = self.getTequilaDetails()
+            self.communityData = dict()
+            self.communityData.update(self.obtainer.getCommunityDetails())
+            tequilaData
+
+            self.urls = urls
+            self.obtainers = list()
+            self.obtainer = Obtainer()
+
+            return
+
+        def getChildren(self):
+
+            return children
+
+        def commit(self, path=None, mode="w", review_fname="tequila-reviews.json",
+                   tequila_fname="tequila-details.json"):
+            # Dump reviewer data
+
+            if path is not None:
+                review_fname = os.path.join(path, review_fname)
+                tequila_fname = os.path.join(path, tequila_fname)
+
+            with open(review_fname, mode) as f:
+                json.dump(self.obtainer.reviewerData, f)
+
+            with open(tequila_fname, mode) as f:
+                json.dump(self.obtainer.communityData, f)
+
+            return
+
+
