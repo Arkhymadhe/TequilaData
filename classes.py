@@ -1,14 +1,18 @@
 import json
+import os
 import time
+
 import pandas as pd
 import numpy as np
+
 import requests
+from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 
 from pprint import pprint
 
 
-class Obtainer():
+class Obtainer:
     def __init__(self, base_url, idx):
         self.idx = idx if idx else 0
         self.base_url = base_url
@@ -178,23 +182,23 @@ class Obtainer():
         )
         return
 
-    class MegaObtainer(Obtainer):
+    class MegaObtainer:
         def __init__(
                 self,
+                index=0,
                 page_num=0,
                 urls=None
         ):
             if urls is None:
+                urls = list()
                 self.page_num = page_num
-                self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila",
+                self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila"
                 self.url = self.pattern.format(self.page_num)
 
-            self.reviewerData = self.tequilaReviews()
-            self.tequilaData = self.getTequilaDetails()
-            self.communityData = dict()
-            self.communityData.update(self.obtainer.getCommunityDetails())
-            tequilaData
+                end = False
 
+
+            self.index = index
             self.urls = urls
             self.obtainers = list()
             self.obtainer = Obtainer()
@@ -213,12 +217,98 @@ class Obtainer():
                 review_fname = os.path.join(path, review_fname)
                 tequila_fname = os.path.join(path, tequila_fname)
 
-            with open(review_fname, mode) as f:
+            with open(review_fname, mode) as f, open(tequila_fname, mode) as g:
                 json.dump(self.obtainer.reviewerData, f)
+                json.dump(self.obtainer.communityData, g)
 
-            with open(tequila_fname, mode) as f:
-                json.dump(self.obtainer.communityData, f)
+                f.close()
+                g.close()
 
             return
+
+
+class PageHunter:
+    def __init__(self, url, page_num=0):
+        self.links = list()
+        self.url=url
+        self.maxPage = None
+        self.page_num = page_num
+        self.session = HTMLSession()
+        return
+
+    def getPage(self):
+        response = self.session.get(self.url)
+        response.html.render(sleep=1)
+
+        links = list(response.html.xpath('//*[@id="hits"]/div', first=True).absolute_links)
+
+        return links
+
+    def getMaxPage(self, response):
+        num_list = response.html.xpath('//*[@id="pagination"]/div/ul/li')
+        num_list = list(map(lambda x: x.text, num_list))
+        num_list = list(filter(lambda x: x.isdigit(), num_list))
+        num_list = [int(x) for x in num_list]
+
+        self.maxPage = max(num_list)
+
+        return
+
+    def run(self):
+        self.links = self.getPage()
+        return
+
+    def rerun(self, url):
+        self.setUrl(url)
+        self.run()
+        return
+
+    def setUrl(self, url):
+        self.url = url
+        return
+
+    def clear(self):
+        self.links.clear()
+        return
+
+
+class WebHunter(PageHunter):
+    index = 0
+    allLinks = list()
+
+    def __init__(self, page_num=0):
+
+        self.page_num = page_num
+        self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila"
+
+        self.pageHunter = PageHunter(self.pattern)
+        self.url = self.pattern.format(self.page_num)
+
+        super(WebHunter, self).__init__(self.url)
+
+        self.pageHunter.run()
+
+        self.commit()
+
+        return
+
+    def getSite(self):
+        self.pageHunter.rerun(url)
+        return
+
+    def run(self):
+        return
+
+    def commit(self):
+        self.allLinks.extend(self.pageHunter.links)
+        self.pageHunter.clear()
+
+        print(
+            "All links updated!\n",
+            "PageHunter instance cleared!\n"
+        )
+        return
+
+
 
 
