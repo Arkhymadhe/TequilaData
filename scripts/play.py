@@ -1,4 +1,5 @@
 from requests_html import HTMLSession, AsyncHTMLSession
+import pandas as pd, json
 
 SITE = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p=1"
 
@@ -25,4 +26,5 @@ def to_numeric(r):
 
 
 print(to_numeric(r))
+print(products.absolute_links)
 
