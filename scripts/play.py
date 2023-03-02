@@ -25,6 +25,10 @@ def to_numeric(r):
     return num_list
 
 
-print(to_numeric(r))
-print(products.absolute_links)
+#print(to_numeric(r))
+#print(products.absolute_links)
+
+df = pd.read_json('links.json').T
+
+print(df.head())
 
