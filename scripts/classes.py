@@ -227,10 +227,10 @@ class Obtainer:
 
 
 class PageHunter:
-    def __init__(self, url,):
+    def __init__(self, url, maxPage=None):
         self.links = list()
         self.url=url
-        self.maxPage = None
+        self.maxPage = maxPage
         self.session = HTMLSession()
         return
 
@@ -238,7 +238,10 @@ class PageHunter:
         response = self.session.get(self.url)
         response.html.render(sleep=1)
 
-        links = list(response.html.xpath('//*[@id="hits"]/div', first=True).absolute_links)
+        links = response.html.xpath('//*[@id="hits"]/div', first=True)
+        links = links.absolute_links
+
+        links = list(links)
 
         return links, response
 
@@ -253,13 +256,23 @@ class PageHunter:
         return
 
     def run(self, set_max=False):
-        self.links, _ = self.getLinks()
+        self.links, r = self.getLinks()
 
         if len(self.links) == 0:
+            print(
+                "Dry run! Links exhausted!\n"
+            )
             return
 
+        print(
+            f"Extracted {len(self.links)} links!\n"
+        )
+
         if set_max:
-            self.getMaxPage(_)
+            self.getMaxPage(r)
+            print(
+                f"New max page number found: Page {self.maxPage}!\n"
+            )
         return
 
     def rerun(self, url, set_max=False):
@@ -282,32 +295,64 @@ class PageHunter:
 class WebHunter(PageHunter):
     index = 0
     allLinks = dict()
+    page_num = 0
 
-    def __init__(self,):
-        self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}&fR[spirit][0]=Tequila"
+    def __init__(self, idx=None, maxPage=None):
+        self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}"
 
-        self.pageHunter = PageHunter(self.pattern)
+        try:
+            with open("params.json", 'r') as f:
+                params = json.load(f)
+
+                self.index = params['idx']
+                maxPage = params['maxPage']
+
+                f.close()
+
+            print(
+                "Proceeding from checkpoint..."
+            )
+        except json.JSONDecodeError:
+            print(
+                "Begin fresh site crawl..."
+            )
+            if idx is not None:
+                self.index = idx
+
+        print(f"  Index    : {self.index}\n  Max Page : {maxPage}\n")
+
         self.url = self.pattern.format(self.index)
 
-        super(WebHunter, self).__init__(self.url)
+        super(WebHunter, self).__init__(self.url, maxPage)
 
-        self.pageHunter.run(set_max = True)
+        self.pageHunter = PageHunter(self.url, maxPage)
 
-        self.commit()
-        self.persist(mode="w")
+        if maxPage is None:
+            self.pageHunter.run(set_max=True)
+            self.commit()
+
+            print(
+                f"Extracted and committed page {self.index + 1}/{self.pageHunter.maxPage}...\n"
+            )
 
         return
 
     def getSite(self):
         set_max = False
 
-        for i in range(self.index, self.pageHunter.maxPage):
+        for i in range(self.index+1, self.pageHunter.maxPage):
+
+            print(
+                f"Attempting extraction for page {i+1}/{self.pageHunter.maxPage}...\n"
+            )
+
             self.url = self.pattern.format(i)
 
-            if i == self.pageHunter.maxPage - 1:
+            if i == (self.pageHunter.maxPage - 1):
                 set_max = True
 
             self.pageHunter.rerun(self.url, set_max)
+            self.page_num = i
 
             if self.pageHunter.cache_empty():
                 self.index = i
@@ -315,14 +360,28 @@ class WebHunter(PageHunter):
 
             self.commit()
 
+            sleep_duration = np.random.randint(low=2, high=10)
+
+            print(
+                f"Sleeping for {sleep_duration} seconds...\n"
+            )
+
+            time.sleep(sleep_duration)
+
+            print(
+                "Awakening...\n"
+            )
+
         self.index = i
+        self.persist()
         return
 
     def run(self):
 
         while True:
             self.getSite()
-            if self.pageHunter.cache_empty():
+
+            if self.index + 1 == self.pageHunter.maxPage:
                 break
 
         print(
@@ -330,13 +389,45 @@ class WebHunter(PageHunter):
         )
         return
 
-    def commit(self, mode="a"):
-        try:
-            self.allLinks[self.index].extend(self.pageHunter.links)
-        except:
-            self.allLinks[self.index] = self.pageHunter.links
+    def commit(self):
+        self.allLinks.update(
+            {
+                self.page_num:
+                dict(
+                    zip(
+                        range(len(self.pageHunter.links)),
+                        self.pageHunter.links
+                    )
+                )
+            }
+        )
+        return
 
-        self.persist(mode=mode)
+    def persist(self, fname="links.json", mode="w+"):
+        with open(fname, mode) as f, open("params.json", "w") as g:
+
+            try:
+                loaded_dict = json.load(f)
+                loaded_dict.update(self.allLinks)
+
+                f.seek(0)
+
+                json.dump(loaded_dict, f, indent=4)
+
+            except json.JSONDecodeError:
+                json.dump(self.allLinks, f, indent=4)
+
+            json.dump(
+                {
+                    "idx": self.index,
+                    "maxPage": self.pageHunter.maxPage
+                },
+                g, indent=4
+            )
+
+            f.close()
+
+        self.clear()
 
         self.pageHunter.clear()
 
@@ -346,11 +437,8 @@ class WebHunter(PageHunter):
         )
         return
 
-    def persist(self, fname="links.json", mode="a"):
-        with open(fname, mode) as f:
-            json.dump(self.allLinks, f)
-
-            f.close()
+    def clear(self):
+        self.allLinks.clear()
         return
 
 
