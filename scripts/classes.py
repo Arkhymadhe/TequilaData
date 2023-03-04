@@ -49,6 +49,7 @@ class Obtainer:
 
     def getReviewerData(self, review_html, name="Tequila"):
         """Pick out the needed data fields from a review."""
+
         # Get reviewer name and level of seniority
 
         reviewer_name = review_html.find("div", itemprop="author")
@@ -203,6 +204,8 @@ class Obtainer:
         return drink_details
 
     def getCommunityDetails(self, kind="aromas"):
+        """Extract details and description of product according to community"""
+
         tequila_data = self.base_html.find_all("div", class_=f"{kind} section")
 
         flavours = list(
@@ -260,6 +263,8 @@ class PageHunter:
         return
 
     def getLinks(self):
+        """Get all product links on a Page"""
+
         response = self.session.get(self.url)
         response.html.render(sleep=1, timeout=10)
 
@@ -271,6 +276,8 @@ class PageHunter:
         return links, response
 
     def getMaxPage(self, response):
+        """Find maximum reachable Page from present Page"""
+
         num_list = response.html.xpath('//*[@id="pagination"]/div/ul/li')
         num_list = list(map(lambda x: x.text, num_list))
         num_list = list(filter(lambda x: x.isdigit(), num_list))
