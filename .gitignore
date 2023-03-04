@@ -1,4 +1,10 @@
 .ipynb_checkpoints/
 /.ipynb_checkpoints/
+scripts/__pycache__/
 secrets
 .idea
+data/*.xlsx
+scripts/*.json
+data/*.ipynb
+*.json
+*.ipynb

@@ -12,79 +12,246 @@ from bs4 import BeautifulSoup
 from classes import PageHunter, Obtainer
 
 
-
 class MegaObtainer:
-    def __init__(
-            self,
-            index=0,
-            page_num=0,
-            urls=None
-    ):
+    TEQUILA_STORE = os.path.join(
+        os.getcwd().replace("scripts", "data"), "final", "tequilaData.json"
+    )
+
+    REVIEWER_STORE = os.path.join(
+        os.getcwd().replace("scripts", "data"), "final", "tequilaReviews.json"
+    )
+
+    COMMUNITY_STORE = os.path.join(
+        os.getcwd().replace("scripts", "data"), "final", "communityData.json"
+    )
+
+    ARCHIVE_STORE = os.path.join(
+        os.getcwd().replace("scripts", "secrets"), "megaObtainerArchive.json"
+    )
+
+    tequila_index = 0
+    review_index = 0
+    community_index = 0
+
+    REVIEWER_DB = dict()
+    TEQUILA_DB = dict()
+    COMMUNITY_DB = dict()
+
+    def __init__(self, index=0, page_num=0, urls=None):
         if urls is None:
-            urls = list()
-            self.webHunter = WebHunter()
-            self.webHunter.run()
+            try:
+                self.loadLinks()
 
-            end = False
+            except json.JSONDecodeError:
+                self.webHunter = WebHunter()
+                self.webHunter.run()
+        else:
+            self.urls = urls
 
+        self.num_pages = len(self.urls)
+
+        self.rand_page = np.random.randint(low=0, high=self.num_pages)
 
         self.index = index
-        self.urls = urls
-        self.obtainers = list()
-        self.obtainer = Obtainer()
+        self.obtainer = Obtainer(None, None)
+
+        try:
+            with open(self.ARCHIVE_STORE, "r") as f:
+                self.archive = json.load(f)
+                f.close()
+
+            size_now = self.numUrls()
+            print(f"Present number of URLs to scrape through: {size_now}")
+
+            self.trimUrls()
+            size_later = self.numUrls()
+
+            if size_now != size_later:
+                print(
+                    f"New number of URLs to scrape through: {size_later}."
+                )
+
+                print(
+                    f"Reduction of {100 * (size_now - size_later) / size_now}%"
+                )
+        except json.JSONDecodeError:
+            self.archive = dict()
 
         return
 
-    def getChildren(self):
+    def commit(self):
+        self.REVIEWER_DB.update(self.obtainer.reviewerData)
 
-        return children
+        self.TEQUILA_DB.update({self.tequila_index: self.obtainer.tequilaData})
 
-    def commit(self, path=None, mode="w", review_fname="tequila-reviews.json",
-               tequila_fname="tequila-details.json"):
+        self.COMMUNITY_DB.update({self.community_index: self.obtainer.communityData})
+
+        self.tequila_index += 1
+        self.community_index += 1
+
+        return
+
+    def persist(self, mode="w"):
         # Dump reviewer data
 
-        if path is not None:
-            review_fname = os.path.join(path, review_fname)
-            tequila_fname = os.path.join(path, tequila_fname)
+        with open(self.REVIEWER_STORE, "r") as f, open(
+            self.TEQUILA_STORE, "r"
+        ) as g, open(self.COMMUNITY_STORE, "r") as h:
+            try:
+                r = json.load(f)
+                r.update(self.REVIEWER_DB)
+            except json.JSONDecodeError:
+                r = self.REVIEWER_DB
 
-        with open(review_fname, mode) as f, open(tequila_fname, mode) as g:
-            json.dump(self.obtainer.reviewerData, f)
-            json.dump(self.obtainer.communityData, g)
+            try:
+                teq = json.load(g)
+                teq.update(self.TEQUILA_STORE)
+            except json.JSONDecodeError:
+                teq = self.TEQUILA_STORE
+
+            try:
+                com = json.load(h)
+                com.update(self.COMMUNITY_DB)
+            except json.JSONDecodeError:
+                com = self.COMMUNITY_DB
 
             f.close()
             g.close()
+            h.close()
 
+        with open(self.REVIEWER_STORE, mode) as f, open(
+            self.TEQUILA_STORE, mode
+        ) as g, open(self.COMMUNITY_STORE, mode) as h:
+            json.dump(r, f, indent=4)  # Reviewer data
+            json.dump(teq, g, indent=4)  # Tequila data
+            json.dump(com, h, indent=4)  # Community data
+
+            f.close()
+            g.close()
+            h.close()
+
+        self.clear()
+
+        return
+
+    def crawlUrl(self):
+        num_pages = len(self.urls)
+
+        rand_page = np.random.randint(low=0, high=num_pages)
+
+        # Present link and previous link selected must not be on pages that are too far apart.
+        # This would not be similar to a human web-browsing pattern, and may lead to flagging
+        while abs(self.rand_page - rand_page) > 3:
+            rand_page = np.random.randint(low=0, high=num_pages)
+            self.archive.setdefault(rand_page, list())
+
+            if not bool(self.urls[rand_page]):
+                del self.urls[rand_page]
+                continue
+
+        # Store the randomly selected page from which link will be picked out
+        self.rand_page = rand_page
+
+        links = self.urls[self.rand_page]
+        num_links = len(links)
+
+        link_index = np.random.randint(low=0, high=num_links)
+
+        self.obtainer.rerun(links[link_index])
+
+        links_scraped = len(self.archive[self.rand_page])
+
+        print(
+            f"Link [{links_scraped+1}/{num_links + links_scraped}] for Page {self.rand_page} scraped!\n"
+        )
+
+        self.commit()
+
+        print("Reviews, tequila details, and community characterizations committed!\n")
+
+        self.persist()
+
+        print("Reviews, tequila details, and community characterizations persisted!\n")
+
+        # Eliminate scraped link from urls to be visited
+        scraped_link = links.pop(link_index)
+        self.urls[rand_page] = links
+
+        # Save it to archived links
+        self.archive[rand_page].append(scraped_link)
+
+        self.persistArchive()
+
+        return
+
+    def persistArchive(self):
+        with open(self.ARCHIVE_STORE, "w") as f:
+            json.dump(self.archive, f)
+            f.close()
+
+        return
+
+    def trimUrls(self):
+        self.urls = {
+            key: list(set(urls) - set(self.archive[key]))
+            for key, urls in self.urls.items()
+        }
+
+        return
+
+    def numUrls(self):
+        return sum([len(self.urls[k]) for k in self.urls])
+
+    def run(self):
+        while bool(self.urls):
+            self.crawlUrl()
+        return
+
+    def loadLinks(self):
+        with open(self.webHunter.LINK_STORE) as links:
+            self.urls = json.load(links)
+
+        return
+
+    def clear(self):
+        self.TEQUILA_DB.clear()
+        self.REVIEWER_DB.clear()
+        self.COMMUNITY_DB.clear()
         return
 
 
 class WebHunter(PageHunter):
     index = 0
-    allLinks = dict()
+    db = dict()
     page_num = 0
 
+    SECRET = os.path.join(os.getcwd().replace("scripts", "secrets"), "webHunter.json")
+
+    LINK_STORE = os.path.join(os.getcwd().replace("scripts", "data"), "links.json")
+
     def __init__(self, idx=None, maxPage=None):
-        self.pattern = "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}"
+        self.pattern = (
+            "https://www.tequilamatchmaker.com/tequilas?q=&hPP=30&idx=BaseProduct&p={}"
+        )
 
         try:
-            with open("params.json", 'r') as f:
+            with open(self.SECRET, "r") as f:
                 params = json.load(f)
 
-                self.index = params['idx']
-                maxPage = params['maxPage']
+                self.index = params["idx"]
+                maxPage = params["maxPage"]
 
                 f.close()
 
-            print(
-                "Proceeding from checkpoint..."
-            )
+            print("Proceeding from checkpoint...")
         except json.JSONDecodeError:
-            print(
-                "Begin fresh site crawl..."
-            )
+            print("Begin fresh site crawl...")
             if idx is not None:
                 self.index = idx
 
-        print(f"  Index    : {self.index}\n  Page Number: {self.index+1}\n  Max Page : {maxPage}\n")
+        print(
+            f"  Index    : {self.index}\n  Page Number: {self.index+1}\n  Max Page : {maxPage}\n"
+        )
 
         self.url = self.pattern.format(self.index)
 
@@ -105,8 +272,7 @@ class WebHunter(PageHunter):
     def getSite(self):
         set_max = False
 
-        for i in range(self.index+1, self.pageHunter.maxPage):
-
+        for i in range(self.index + 1, self.pageHunter.maxPage):
             print(
                 f"Attempting extraction for page {i+1}/{self.pageHunter.maxPage}...\n"
             )
@@ -127,97 +293,73 @@ class WebHunter(PageHunter):
 
             sleep_duration = np.random.randint(low=2, high=10)
 
-            print(
-                f"Sleeping for {sleep_duration} seconds...\n"
-            )
+            print(f"Sleeping for {sleep_duration} seconds...\n")
 
             time.sleep(sleep_duration)
 
-            print(
-                "Awakening...\n"
-            )
+            print("Awakening...\n")
 
         self.index = i
         self.persist()
         return
 
     def run(self):
-
         while True:
             self.getSite()
 
             if self.index + 1 == self.pageHunter.maxPage:
                 break
 
-        print(
-            "Entire site scraped!"
-        )
+        print("Entire site scraped!")
         return
 
     def commit(self):
-        self.allLinks.update(
+        self.db.update(
             {
-                self.page_num:
-                dict(
-                    zip(
-                        range(len(self.pageHunter.links)),
-                        self.pageHunter.links
-                    )
+                self.page_num: dict(
+                    zip(range(len(self.pageHunter.links)), self.pageHunter.links)
                 )
             }
         )
         return
 
-    def persist(self, fname="links.json", mode="w"):
+    def persist(self, mode="w"):
         # Retrieve and update previously persisted data, if any
-        with open(fname, 'r') as f:
-
+        with open(self.LINK_STORE, "r") as f:
             try:
                 loaded_dict = json.load(f)
-                loaded_dict.update(self.allLinks)
+                loaded_dict.update(self.db)
 
-                print(
-                    "Updating previous dumps..."
-                )
+                print("Updating previous dumps...")
 
             except json.JSONDecodeError:
-                loaded_dict = self.allLinks
-                print(
-                    "Start dump..."
-                )
+                loaded_dict = self.db
+                print("Start dump...")
 
             f.close()
 
         # Persist recent data
-        with open(fname, mode) as f:
+        with open(self.LINK_STORE, mode) as f:
             json.dump(loaded_dict, f, indent=4)
 
         # Persist recent hyperparams
-        with open("params.json", "w") as g:
+        with open(self.SECRET, "w") as g:
             json.dump(
-                {
-                    "idx": self.index,
-                    "maxPage": self.pageHunter.maxPage
-                },
-                g, indent=4
+                {"idx": self.index, "maxPage": self.pageHunter.maxPage}, g, indent=4
             )
 
         self.clear()
 
         self.pageHunter.clear()
 
-        print(
-            "All links updated! ",
-            "PageHunter instance cleared!\n"
-        )
+        print("All links updated! ", "PageHunter instance cleared!\n")
         return
 
     def clear(self):
-        self.allLinks.clear()
+        self.db.clear()
         return
 
 
-hunter = WebHunter()
+# hunter = WebHunter()
 
-hunter.run()
-
+# hunter.run()

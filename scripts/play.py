@@ -13,6 +13,7 @@ print(r.status_code)
 
 products = r.html.xpath('//*[@id="hits"]/div', first=True)
 
+
 def getPageNums(r):
     l_nums = r.html.xpath('//*[@id="pagination"]/div/ul/li')
     return list(map(lambda x: x.text, l_nums))
@@ -25,10 +26,9 @@ def to_numeric(r):
     return num_list
 
 
-#print(to_numeric(r))
-#print(products.absolute_links)
+# print(to_numeric(r))
+# print(products.absolute_links)
 
-df = pd.read_json('links.json').T
+df = pd.read_json("drinks.json").T
 
 print(df.head())
-
