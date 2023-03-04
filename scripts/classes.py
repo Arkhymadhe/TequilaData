@@ -1,15 +1,11 @@
 import json
-import os
 import time
 
-import pandas as pd
 import numpy as np
 
 import requests
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
-
-from pprint import pprint
 
 
 class Obtainer:
