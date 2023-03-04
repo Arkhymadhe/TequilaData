@@ -13,6 +13,8 @@ from classes import PageHunter, Obtainer
 
 
 class MegaObtainer:
+    """Mega class which uses [an] instance[s] of the Obtainer class to extract data from multiple pages."""
+
     TEQUILA_STORE = os.path.join(
         os.getcwd().replace("scripts", "data"), "final", "tequilaData.json"
     )
@@ -37,7 +39,7 @@ class MegaObtainer:
     TEQUILA_DB = dict()
     COMMUNITY_DB = dict()
 
-    def __init__(self, index=0, page_num=0, urls=None):
+    def __init__(self, index=0, urls=None):
         if urls is None:
             try:
                 self.loadLinks()
@@ -80,6 +82,8 @@ class MegaObtainer:
         return
 
     def commit(self):
+        """Commit data from Obtainer caches to MegaObtainer caches"""
+
         self.REVIEWER_DB.update(self.obtainer.reviewerData)
 
         self.TEQUILA_DB.update({self.tequila_index: self.obtainer.tequilaData})
@@ -92,7 +96,7 @@ class MegaObtainer:
         return
 
     def persist(self, mode="w"):
-        # Dump reviewer data
+        """Persist all extracted data in MegaObtainer caches to storage"""
 
         with open(self.REVIEWER_STORE, "r") as f, open(
             self.TEQUILA_STORE, "r"
@@ -135,6 +139,8 @@ class MegaObtainer:
         return
 
     def crawlUrl(self):
+        """Crawl through a URL and extract all needed data"""
+
         num_pages = len(self.urls)
 
         rand_page = np.random.randint(low=0, high=num_pages)
@@ -177,7 +183,7 @@ class MegaObtainer:
         scraped_link = links.pop(link_index)
         self.urls[rand_page] = links
 
-        # Save it to archived links
+        # Save it to archived links and persist
         self.archive[rand_page].append(scraped_link)
 
         self.persistArchive()
@@ -185,6 +191,8 @@ class MegaObtainer:
         return
 
     def persistArchive(self):
+        """Persist archived URLS i.e., URLs already crawled through"""
+
         with open(self.ARCHIVE_STORE, "w") as f:
             json.dump(self.archive, f)
             f.close()
@@ -192,6 +200,8 @@ class MegaObtainer:
         return
 
     def trimUrls(self):
+        """Trim out redundant URLs"""
+
         self.urls = {
             key: list(set(urls) - set(self.archive[key]))
             for key, urls in self.urls.items()
@@ -200,6 +210,8 @@ class MegaObtainer:
         return
 
     def numUrls(self):
+        """Number of URLs to crawl through"""
+
         return sum([len(self.urls[k]) for k in self.urls])
 
     def run(self):
@@ -208,12 +220,16 @@ class MegaObtainer:
         return
 
     def loadLinks(self):
+        """Load URLs from persisted storage"""
+
         with open(self.webHunter.LINK_STORE) as links:
             self.urls = json.load(links)
 
         return
 
     def clear(self):
+        """Clear MegaObtainer caches"""
+
         self.TEQUILA_DB.clear()
         self.REVIEWER_DB.clear()
         self.COMMUNITY_DB.clear()
