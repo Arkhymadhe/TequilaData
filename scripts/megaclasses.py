@@ -237,6 +237,8 @@ class MegaObtainer:
 
 
 class WebHunter(PageHunter):
+    """Mega class which uses [an] instance[s] of the PageHunter[s] class to extract links from multiple pages."""
+
     index = 0
     db = dict()
     page_num = 0
@@ -260,6 +262,7 @@ class WebHunter(PageHunter):
                 f.close()
 
             print("Proceeding from checkpoint...")
+
         except json.JSONDecodeError:
             print("Begin fresh site crawl...")
             if idx is not None:
@@ -286,6 +289,8 @@ class WebHunter(PageHunter):
         return
 
     def getSite(self):
+        """Extracts all links on multiple Pages"""
+
         set_max = False
 
         for i in range(self.index + 1, self.pageHunter.maxPage):
@@ -330,6 +335,8 @@ class WebHunter(PageHunter):
         return
 
     def commit(self):
+        """Commit data from PageHunter caches to WebHunter caches"""
+
         self.db.update(
             {
                 self.page_num: dict(
@@ -340,6 +347,8 @@ class WebHunter(PageHunter):
         return
 
     def persist(self, mode="w"):
+        """Persist data in WebHunter caches to persistent memory"""
+
         # Retrieve and update previously persisted data, if any
         with open(self.LINK_STORE, "r") as f:
             try:
@@ -372,6 +381,8 @@ class WebHunter(PageHunter):
         return
 
     def clear(self):
+        """Clear out WebHunter cache"""
+
         self.db.clear()
         return
 
