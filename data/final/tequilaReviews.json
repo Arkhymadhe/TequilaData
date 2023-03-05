@@ -19674,6 +19674,7 @@
         "Recommend": 1
     },
     "2186": {
+<<<<<<< HEAD
         "Reviewer": "Mike B (Great Lakes Tequila Club)",
         "Reviewer_Level": "Tequila Phenom",
         "Ratings_Given": 316,
@@ -19824,6 +19825,158 @@
         "Tequila": "Ins\u00f3lito A\u00f1ejo",
         "Rating": 87,
         "Review": "Has a slightly sweet vanilla aroma and light caramel taste with a nice finish. Not at sweet as some anejo brands which I find is a plus.",
+=======
+        "Reviewer": "Chris Ancell",
+        "Reviewer_Level": "Tequila Badass",
+        "Ratings_Given": 414,
+        "Tequila": "Casa Noble Santana Reserve Extra A\u00f1ejo",
+        "Rating": 80,
+        "Review": "Strong aroma of oak with underlying notes of cherry and pear. (Surprisingly, the typical CN chocolate and vanilla notes are absent.) And, a noticeable briny aroma at the end. Flavors are classic Casa Noble - chocolate and vanilla with spicy peppermint on the finish. The finish is long, warm and lingering.",
+        "Recommend": 1
+    },
+    "2187": {
+        "Reviewer": "Ken Hungerford",
+        "Reviewer_Level": "Tequila Maniac",
+        "Ratings_Given": 32,
+        "Tequila": "Casa Noble Santana Reserve Extra A\u00f1ejo",
+        "Rating": 82,
+        "Review": "dark oaky flavors spicy with a long finish.",
+        "Recommend": 1
+    },
+    "2188": {
+        "Reviewer": "Mark Berry",
+        "Reviewer_Level": "Tequila Freak",
+        "Ratings_Given": 27,
+        "Tequila": "Casa Noble Santana Reserve Extra A\u00f1ejo",
+        "Rating": 100,
+        "Review": "My favorite to date",
+        "Recommend": 1
+    },
+    "2189": {
+        "Reviewer": "John  Luoma ",
+        "Reviewer_Level": "Tequila Enthusiast",
+        "Ratings_Given": 5,
+        "Tequila": "Casa Noble Santana Reserve Extra A\u00f1ejo",
+        "Rating": 98,
+        "Review": "I have the high times barrel select extra anejo and I am very happy with it nice agave flavor with sweetness and a long smooth finish",
+        "Recommend": 1
+    },
+    "2190": {
+        "Reviewer": "Nathan Newbury",
+        "Reviewer_Level": "Tequila Lover",
+        "Ratings_Given": 10,
+        "Tequila": "Casa Noble Santana Reserve Extra A\u00f1ejo",
+        "Rating": 100,
+        "Review": "This is my first Anejo and Wow",
+        "Recommend": 1
+    },
+    "2191": {
+        "Reviewer": "Pepe @pepeagave @donpepetequila",
+        "Reviewer_Level": "Tequila Badass",
+        "Ratings_Given": 473,
+        "Tequila": "Derechito Blanco",
+        "Rating": 81,
+        "Review": "Cinnamon and baking spices nuances, reminds me of a lighter version of Fuenteseca",
+        "Recommend": 1
+    },
+    "2192": {
+        "Reviewer": "Nick Hewton",
+        "Reviewer_Level": "Tequila Savant",
+        "Ratings_Given": 240,
+        "Tequila": "Derechito Blanco",
+        "Rating": 81,
+        "Review": "Cinnamon Bitter herbal note on finish",
+        "Recommend": 1
+    },
+    "2193": {
+        "Reviewer": "Danielle Muzyka",
+        "Reviewer_Level": "Tequila Guru",
+        "Ratings_Given": 91,
+        "Tequila": "Derechito Blanco",
+        "Rating": 89,
+        "Review": "Agave on the noseLittle green, little bit of earth.Agave forward.Good mouth feel.Smooth finish.",
+        "Recommend": 1
+    },
+    "2194": {
+        "Reviewer": "Franz Swinton",
+        "Reviewer_Level": "Tequila Phenom",
+        "Ratings_Given": 344,
+        "Tequila": "Derechito Blanco",
+        "Rating": 85,
+        "Review": "Tastes like a winter blanco, nice toasted almonds and cinnamon throughout.",
+        "Recommend": 1
+    },
+    "2195": {
+        "Reviewer": "Beau Lynch ",
+        "Reviewer_Level": "Tequila Boss",
+        "Ratings_Given": 557,
+        "Tequila": "Derechito Blanco",
+        "Rating": 78,
+        "Review": "This has a crazy amount of cinnamon flavour to it, good tequila, a little thin but overall a decent product.",
+        "Recommend": 1
+    },
+    "2196": {
+        "Reviewer": "Mike B (Great Lakes Tequila Club)",
+        "Reviewer_Level": "Tequila Phenom",
+        "Ratings_Given": 316,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 88,
+        "Review": "A friend shared a glass with me, and wow\u2014first Cuervo I\u2019ve enjoyed! This one was 38% ABV purchased in 2004. Personally didn\u2019t detect additives, it just tasted like a delicious aged tequila. Ah, the good ole days for JC.",
+        "Recommend": 1
+    },
+    "2197": {
+        "Reviewer": "Don Cervantes ",
+        "Reviewer_Level": "Tequila Ninja",
+        "Ratings_Given": 123,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 86,
+        "Review": "This is for the bottle shown, 1989 bottle of a\u00f1ejo, sealed and rested 15 minutes. Very buttery, with a rich natural sweetness to the oak, dark cherry.",
+        "Recommend": 1
+    },
+    "2198": {
+        "Reviewer": "Seattle Juan",
+        "Reviewer_Level": "Tequila Honey Badger",
+        "Ratings_Given": 1277,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 86,
+        "Review": "Another ATM bottle provided by a guest. Nice richly aged A\u00f1ejo that shows JC could make very good tequila before money became king.",
+        "Recommend": 1
+    },
+    "2199": {
+        "Reviewer": "Greg Bartolotta @aged_agave",
+        "Reviewer_Level": "Tequila Phenom",
+        "Ratings_Given": 366,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 88,
+        "Review": "This was an outstanding Anejo for its time, well made, beautifully balanced, cooked agave and wood. Not your kids Jose Cuervo",
+        "Recommend": 1
+    },
+    "2200": {
+        "Reviewer": "Zach Ancell",
+        "Reviewer_Level": "Tequila Savant",
+        "Ratings_Given": 271,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 80,
+        "Review": "NOM 1104|NOM 1104. Aroma: Strong oak notes that really overpowers everything else. There is a hint of vanilla but it's very subtle.Flavor: Again, strong oak notes but now the vanilla starts to show through more. Reminds me of Familia but a little sweeter. There is also a slight hint of chocolate.",
+        "Recommend": 1
+    },
+    "2201": {
+        "Reviewer": "Chris Ancell",
+        "Reviewer_Level": "Tequila Badass",
+        "Ratings_Given": 414,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 80,
+        "Review": "NOM 1104|NOM 1104. Relatively subtle aroma is dominated by oak with some caramel and something almost like turpentine (not in a bad way). Caramel, vanilla and spice flavor that clearly shows barrel age but is not overly oaky. Definite similarities to the Reserva de la Familia but significantly tamed down on the oak (I prefer this milder oak flavor). Nice finish but relatively short.",
+        "Recommend": 1
+    },
+    "2202": {
+        "Reviewer": "christine h",
+        "Reviewer_Level": "Tequila Savant",
+        "Ratings_Given": 203,
+        "Tequila": "Jose Cuervo A\u00f1ejo",
+        "Rating": 85,
+        "Review": "cuervo dongletasting 9/6=22oak agave caramel clove",
+>>>>>>> 1223229542fa6685417f5820f0deefeaf8bceae2
         "Recommend": 1
     },
     "2203": {
@@ -42261,330 +42414,6 @@
         "Tequila": "La Terna A\u00f1ejo",
         "Rating": 84,
         "Review": "NOM 1465|At 35% ABV, you are not getting a very robust nose, but pleasant enough. Caramel, a blend of cedar & pine, a dash of vanilla, and ripe berry like fruit. The flavor volume is turned up significantly as compared to the nose. Vanilla wafers, black pepper heat, brown jerk spices and roasted almonds. Finish is \u201cshortish\u201d with a sweet/ hot/ velvety feel. Available at El B\u00faho for $330 pesos - a bargain tequila.",
-        "Recommend": 1
-    },
-    "2203": {
-        "Reviewer": "Mike B (Great Lakes Tequila Club)",
-        "Reviewer_Level": "Tequila Phenom",
-        "Ratings_Given": 316,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 85,
-        "Review": "Agave, cherry, spearmint, white pepper. Slight bitters.",
-        "Recommend": 1
-    },
-    "2204": {
-        "Reviewer": "Don Cervantes ",
-        "Reviewer_Level": "Tequila Ninja",
-        "Ratings_Given": 123,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 92,
-        "Review": "Ive only been surprised by a new brand twice before. Great nose on entire line. Super savory and finish is incredible and my favorite. Not an everyday for the price, but definitely worth the price. Very special and after hearing the story of how this came to be makes total sense why it tastes so special.",
-        "Recommend": 1
-    },
-    "2205": {
-        "Reviewer": "Greg Bartolotta @aged_agave",
-        "Reviewer_Level": "Tequila Phenom",
-        "Ratings_Given": 366,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 85,
-        "Review": "Like this high proof agave forward blanco. Good balance, only negative is the price point at $80 plus dollars",
-        "Recommend": 1
-    },
-    "2206": {
-        "Reviewer": "Lou  Agave (Long Island Lou Tequila)",
-        "Reviewer_Level": "Tequila Badass",
-        "Ratings_Given": 400,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "Delicious silky-smooth high-proof Blanco. Lots of agave sweetness, anise, floral, herbal just simply fantastic. In my Top 10 high-proof Blancos",
-        "Recommend": 1
-    },
-    "2207": {
-        "Reviewer": "Don Heiser",
-        "Reviewer_Level": "Tequila Wizard",
-        "Ratings_Given": 762,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 86,
-        "Review": "Nose: cloves, cinnamon, mineral, vanilla, and floral Flavor: some cooked agave, tart, vegetal, herbal, and dried dark cherries Finish: Medium and spicy, ends with dark cherries",
-        "Recommend": 1
-    },
-    "2208": {
-        "Reviewer": "Remy Newland",
-        "Reviewer_Level": "Tequila Wizard",
-        "Ratings_Given": 894,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 89,
-        "Review": "Nose:   Spicy entrance: cloves, cinnamon, green cardamom and cracked pepper. Green agave and sweet ripe agave aromas. Followed up with a floral/ berry note. Hints of guava and dark cherries. An earthy, mineral element in the aroma. Light citrus and baked pineapples. A touch of smokiness. Flavor:   Ripe natural agave leads into spiciness and a buttery brown sugar note.  The combination of jalape\u00f1o pepper, plus white and black pepper are borderline overpowering - as well as holding trace bitterness. There are vegetal and herbal undertones of artichoke and asparagus. A green banana note, a whisper of citrus. Not really oily in the mouth - yet it is appealing on the palate. A clean profile. Finishes with a suggestion of subtle vanilla. This high proof needs a lot of time to open up and show it\u2019s pedigree.",
-        "Recommend": 1
-    },
-    "2209": {
-        "Reviewer": "Adam Stemmler",
-        "Reviewer_Level": "Tequila Phenom",
-        "Ratings_Given": 326,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 82,
-        "Review": "Green agave, peppercorn, floral",
-        "Recommend": 1
-    },
-    "2210": {
-        "Reviewer": "Seattle Juan",
-        "Reviewer_Level": "Tequila Honey Badger",
-        "Ratings_Given": 1277,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 85,
-        "Review": "Rated blind for MBTC 2018.",
-        "Recommend": 1
-    },
-    "2211": {
-        "Reviewer": "Craig Macadang",
-        "Reviewer_Level": "Tequila Honey Badger",
-        "Ratings_Given": 1253,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 84,
-        "Review": "MBTC 2018 Blind Tasting",
-        "Recommend": 1
-    },
-    "2212": {
-        "Reviewer": "Bubba Atherton",
-        "Reviewer_Level": "Tequila Ninja",
-        "Ratings_Given": 128,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "Tasted this newcomer at the first annual Margaritas y Mas Festival in Santa Barbara . Really nice earthy , vegetal slightly sweet very agave forward highproof without the extra heat . This new label has a pretty cool story of finding a very small distillery , that I don\u2019t even think had a NOM and getting them to produce their tequila , and wanting to do things like we know they should be done . Hope they can pull it off because this is some really tasty stuff . Keep yer eyes on this one !!!",
-        "Recommend": 1
-    },
-    "2213": {
-        "Reviewer": "Guillermo  Ortega ",
-        "Reviewer_Level": "Tequila Enthusiast",
-        "Ratings_Given": 5,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "I got this because everyone was like it's super good and yummy...honestly it was going to try there other Repo and Anejo",
-        "Recommend": 1
-    },
-    "2214": {
-        "Reviewer": "Kyle Trail",
-        "Reviewer_Level": "Tequila Warrior",
-        "Ratings_Given": 40,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 85,
-        "Review": "Super smooth first off. Fruit is ever present. Surprisingly lovely for the price.",
-        "Recommend": 1
-    },
-    "2215": {
-        "Reviewer": "Kyle Trail",
-        "Reviewer_Level": "Tequila Fan",
-        "Ratings_Given": 2,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 88,
-        "Review": "Surprisingly smooth. Fruit forward and just a real surprise.",
-        "Recommend": 1
-    },
-    "2216": {
-        "Reviewer": "Adrian Sak",
-        "Reviewer_Level": "Tequila Lover",
-        "Ratings_Given": 11,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 86,
-        "Review": "Finish is very strong, lots of straight agave on the taste. Pepper and vegetal flavors come through.",
-        "Recommend": 1
-    },
-    "2217": {
-        "Reviewer": "Gregory Agave Spectator",
-        "Reviewer_Level": "Tequila Aficionado",
-        "Ratings_Given": 50,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 83,
-        "Review": "When it\u2019s a high proof kind of day, this blanco is a good option especially for palates looking for pepper notes and mild agave flavors.",
-        "Recommend": 1
-    },
-    "2218": {
-        "Reviewer": "Marcos Liang",
-        "Reviewer_Level": "Tequila Ninja",
-        "Ratings_Given": 130,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 84,
-        "Review": "Batch No. BA02/22.Nose: sweet cooked agave that gets slightly blocked by jalape\u00f1o & metallic notes. 15 minutes in the glass the metallic aroma goes away.Palate: sweet cooked agave, earthy & mineral.Finish is medium, which i expected to be longer due to higher abv. Good thing is that the sweet cooked agave persists.",
-        "Recommend": 1
-    },
-    "2219": {
-        "Reviewer": "David Gleason",
-        "Reviewer_Level": "Tequila Savant",
-        "Ratings_Given": 287,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 86,
-        "Review": "Cazcanes is one of the elite, quality producers.  The price seems to be declining.  This is a high proof that does not \u201cburn\u201d like inferior products.  This has a mild agave nose followed by a much bigger agave follow up.  There is pepper and a little bit of a mouthfeel coating.  The mouthfeel is more watery than oily.  The finish brings more pepper which is to be expected from a high proof product.  This is dangerously smooth for a bold product.  Definitely put this in your HP collection.  Some comments expressed that this would not be an \u201ceveryday\u201d drinker.  As the price settles,  this may not be the case.  Some products on your shelf identify you as an expert to your friends.  This is one of those products.  You don\u2019t have to share. Haha.",
-        "Recommend": 1
-    },
-    "2220": {
-        "Reviewer": "Joel Rojas",
-        "Reviewer_Level": "Tequila Ninja",
-        "Ratings_Given": 155,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 87,
-        "Review": "Nothing needs to be said about this Blanco, one of the best in the market. Great tasty Blanco.",
-        "Recommend": 1
-    },
-    "2221": {
-        "Reviewer": "Alexander Mikulka",
-        "Reviewer_Level": "Tequila Maniac",
-        "Ratings_Given": 34,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 87,
-        "Review": "Bottle: Batch No. 003/21Appearance: ClearNose: Cooked and raw agave, earth, alcohol, smoke, vegetal, black pepper, mint, and flowers\u2026fairly straightforwardPalate: Heavy cooked and raw agave, black pepper, alcohol, flowers, earth, minerality, herbal, artichoke, mint, asparagus, and baking spice\u2026simple, green, and refreshingFinish: Long, with lingering agave, alcohol, and vegetal notesOverall:",
-        "Recommend": 1
-    },
-    "2222": {
-        "Reviewer": "Ray Y. H",
-        "Reviewer_Level": "Tequila Fan",
-        "Ratings_Given": 4,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "wow! this is an agave bomb! very agave forward! nice and oily! coats the mouth very well, does not feel like 100 proof at all! natural fermentation does bring some funkiness.",
-        "Recommend": 1
-    },
-    "2223": {
-        "Reviewer": "Joe Geraghty",
-        "Reviewer_Level": "Tequila Maniac",
-        "Ratings_Given": 32,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 84,
-        "Review": "heavy floral and agave nose. Strong agave sweetness followed by some peppery heat, the 100 proof definitely adds a punch but surprisingly smooth considering.",
-        "Recommend": 1
-    },
-    "2224": {
-        "Reviewer": "Toderick Cartwright",
-        "Reviewer_Level": "Tequila Fan",
-        "Ratings_Given": 2,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 80,
-        "Review": "Kicks you in the face. Something you serve to your adversary before a Wild West duel. Will proceed with caution next time.",
-        "Recommend": 1
-    },
-    "2225": {
-        "Reviewer": "christine h",
-        "Reviewer_Level": "Tequila Savant",
-        "Ratings_Given": 203,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 84,
-        "Review": "July 2 2022CAZCANES BLANCO NO 9high proof 50% ABV Nose very off-putting, funky cheesy pukey and high alcohol Taste: much different and better than the nose. Sweet agave with heat and pepper Finish: lingers with warmth, sweet agave and pepperI liked it better when I tried it a month or two later so I adjusted my rating. still don't love the nose",
-        "Recommend": 1
-    },
-    "2226": {
-        "Reviewer": "Duane Compton",
-        "Reviewer_Level": "Tequila Freak",
-        "Ratings_Given": 26,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 87,
-        "Review": "Nose is dominated by cooked agave with some mint and scent of tilled earth. Very soft mouthfeel. Flavors of agave and warmth. Very nice for high proof. Finishes with minerality.",
-        "Recommend": 1
-    },
-    "2227": {
-        "Reviewer": "Tim Schmidt",
-        "Reviewer_Level": "Tequila Enthusiast",
-        "Ratings_Given": 8,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 89,
-        "Review": "Agave forward and very nice finish. Little floral and  earthy, peppery. A Solid blanco, albeit not the best value.",
-        "Recommend": 1
-    },
-    "2228": {
-        "Reviewer": "Carl Evans",
-        "Reviewer_Level": "Tequila Savant",
-        "Ratings_Given": 211,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "This is a different Blanco. It has a funky taste to it that is pleasant. Intense agave, butter and the alcohol for a high proof is not that noticeable.",
-        "Recommend": 1
-    },
-    "2229": {
-        "Reviewer": "K B",
-        "Reviewer_Level": "Tequila Freak",
-        "Ratings_Given": 20,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 83,
-        "Review": "Very agave forward in taste and smell, just remember it is a high proof tequila. Even enjoyed it with one large ice cube.",
-        "Recommend": 1
-    },
-    "2230": {
-        "Reviewer": "Patrick Gilmore",
-        "Reviewer_Level": "Tequila Enthusiast",
-        "Ratings_Given": 7,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 70,
-        "Review": "It is a good Blanco, but a little spicy. I like the Flavio, but not amazing",
-        "Recommend": 1
-    },
-    "2231": {
-        "Reviewer": "Pablo Torre",
-        "Reviewer_Level": "Tequila Fanatic",
-        "Ratings_Given": 18,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 92,
-        "Review": "If you want to truly experience the smell and taste of agave, this is the one to try. Being a high proof it isn\u2019t for the faint of heart but it\u2019s surprisingly smooth with peppery spice flavor. Absolutely wonderful tequila.",
-        "Recommend": 1
-    },
-    "2232": {
-        "Reviewer": "Archie Brown",
-        "Reviewer_Level": "Tequila Phenom",
-        "Ratings_Given": 353,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "Very good. Vegetal and cooked agave presence.  For a high proof not a bad burn good medium finish. Everyone should try",
-        "Recommend": 1
-    },
-    "2233": {
-        "Reviewer": "Greg Mock",
-        "Reviewer_Level": "Tequila Guru",
-        "Ratings_Given": 82,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 61,
-        "Review": "I think we got a bad bottle. I would try another taste from new bottle.  Tastes like a dead body part in it.",
-        "Recommend": 1
-    },
-    "2234": {
-        "Reviewer": "Dave Dinius",
-        "Reviewer_Level": "Tequila Guru",
-        "Ratings_Given": 91,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 87,
-        "Review": "This is an excellent tequila. Agave busting in on the nose. Taste is a lot of agave too. The real kicker here is this is a 100 proof and sooo easy to sip on. The agave lingers in on the finish as well. The only real knock against it is the price, it is pricey. I have been seeing the price per bottle drop and I believe as more gets sold, the lower it can go.",
-        "Recommend": 1
-    },
-    "2235": {
-        "Reviewer": "Tequila Hombre",
-        "Reviewer_Level": "Tequila Guru",
-        "Ratings_Given": 94,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 93,
-        "Review": "all I can say about this Blanco is WOW!  nose:. beautiful baking spices with a vegetal and floral nose. you can smell the fresh spring water too. flavors. wow!  the flavor on this really pops. You get lots of baking spices, vegetal, a little anise in there to balance things out and it finishes with a nice cinnamon sweetness with a touch of honey. I really like this one. I put it up against the Fortaleza still strength (one of my favorites) and this won!  Definitely worth a try but not cheap. This is more like a Calle 23 Criollo type Blanco where you sip when you want something really special. very small batch stuff.",
-        "Recommend": 1
-    },
-    "2236": {
-        "Reviewer": "Shawn Miller",
-        "Reviewer_Level": "Tequila Guru",
-        "Ratings_Given": 80,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 90,
-        "Review": "Sampled at Monterey Festival. It\u2019s really excellent. Perhaps the purest, cleanest, valley tequila I\u2019ve ever had. Exceptional. Really expensive, but exceptional.",
-        "Recommend": 1
-    },
-    "2237": {
-        "Reviewer": "Dave Checkor",
-        "Reviewer_Level": "Tequila Fan",
-        "Ratings_Given": 2,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 93,
-        "Review": "Met them at Tacos and Tequila in Ventura. Without a doubt the best blanco I\u2019ve ever had!!! If you love tequila this will blow you away!!",
-        "Recommend": 1
-    },
-    "2238": {
-        "Reviewer": "Howard Smith",
-        "Reviewer_Level": "Tequila Fan",
-        "Ratings_Given": 4,
-        "Tequila": "Cazcanes No. 9 Blanco",
-        "Rating": 98,
-        "Review": "This tequila is a 100 proof Blanco, not 80.",
         "Recommend": 1
     }
 }
