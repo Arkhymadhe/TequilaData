@@ -1,32 +1,29 @@
 import json
-import os
 import time
 
-import pandas as pd
 import numpy as np
 
 import requests
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
-
-from pprint import pprint
+from utils import getRandomHeaders
 
 
 class Obtainer:
     def __init__(self, base_url, idx=None):
         self.idx = idx if idx else 0
         self.base_url = base_url
+        self.header = getRandomHeaders()
 
-        self.base_html = BeautifulSoup(
-            requests.get(self.base_url).content, "html.parser"
-        )
+        self.base_html = None
+        self.tequilaName = None
 
-        self.tequilaName = self.base_html.findAll("h1", itemprop="name")
-        self.tequilaName = self.tequilaName[0].text.replace("\n", "")
+        self.setBaseHtml()
+        self.setTequilaName()
 
-        self.reviewerData = None
-        self.tequilaData = None
-        self.communityData = None
+        self.reviewerData = dict()
+        self.tequilaData = dict()
+        self.communityData = dict()
 
     def run(self):
         self.reviewerData = self.tequilaReviews()
@@ -39,6 +36,9 @@ class Obtainer:
 
     def rerun(self, url):
         self.setUrl(url)
+        self.setBaseHtml()
+        self.setTequilaName()
+
         self.clear()
         self.run()
         return
@@ -47,8 +47,20 @@ class Obtainer:
         self.base_url = url
         return
 
+    def setBaseHtml(self,):
+        self.base_html = BeautifulSoup(
+            requests.get(self.base_url, self.header).content, "html.parser"
+        )
+        return
+
+    def setTequilaName(self, ):
+        self.tequilaName = self.base_html.findAll("h1", itemprop="name")
+        self.tequilaName = self.tequilaName[0].text.replace("\n", "")
+        return
+
     def getReviewerData(self, review_html, name="Tequila"):
         """Pick out the needed data fields from a review."""
+
         # Get reviewer name and level of seniority
 
         reviewer_name = review_html.find("div", itemprop="author")
@@ -78,7 +90,8 @@ class Obtainer:
         # The review attached to the rating
         review_text = review_html.find("p", class_="card-text", itemprop="description")
         review_text = review_text.text.replace("\n", "")
-        review_text = review_text[:-1] if review_text[-1] == " " else review_text
+        #review_text = review_text[:-1] if review_text[-1] == " " else review_text
+        review_text = review_text.rstrip() # This line or the one above
 
         # Does reviewer recommend this tequila?
         recom = review_html.find("span", class_="label").text.replace("\n", "")
@@ -124,7 +137,10 @@ class Obtainer:
             print(f"URL: {url}\n")
             sleep_duration = np.random.randint(low=2, high=8)
 
-            soup = BeautifulSoup(requests.get(url).content, "html.parser")
+            if np.random.randn() >= .5:
+                self.header = getRandomHeaders()
+
+            soup = BeautifulSoup(requests.get(url, self.header).content, "html.parser")
 
             if soup.text == "\n":
                 break
@@ -192,6 +208,12 @@ class Obtainer:
             map(lambda x: int(x.text.strip("\n").split("\n\n")[0]), given_ratings)
         )
 
+        # If there are no ratings from panel or community (or both)
+        if not bool(given_ratings):
+            given_ratings = [None, None]
+        elif len(given_ratings) == 1:
+            given_ratings.append(None)
+
         drink_details.update(
             {
                 "Num_Ratings": num_ratings,
@@ -203,25 +225,31 @@ class Obtainer:
         return drink_details
 
     def getCommunityDetails(self, kind="aromas"):
-        tequila_data = self.base_html.find_all("div", class_=f"{kind} section")
+        """Extract details and description of product according to community"""
 
-        flavours = list(
-            map(
-                lambda x: kind.capitalize() + "_" + x.text,
-                tequila_data[0].find_all("div", class_="name"),
+        try:
+            tequila_data = self.base_html.find_all("div", class_=f"{kind} section")
+
+            flavours = list(
+                map(
+                    lambda x: kind.capitalize() + "_" + x.text,
+                    tequila_data[0].find_all("div", class_="name"),
+                )
             )
-        )
 
-        flavours_vals = list(
-            map(
-                lambda x: x.text.replace("\n", ""),
-                tequila_data[0].find_all("div", class_="taste"),
+            flavours_vals = list(
+                map(
+                    lambda x: x.text.replace("\n", ""),
+                    tequila_data[0].find_all("div", class_="taste"),
+                )
             )
-        )
 
-        flavours_vals = list(map(lambda x: int(x) if x.isdigit() else x, flavours_vals))
+            flavours_vals = list(map(lambda x: int(x) if x.isdigit() else x, flavours_vals))
 
-        taste_profile = dict(zip(flavours, flavours_vals))
+            taste_profile = dict(zip(flavours, flavours_vals))
+
+        except IndexError:
+            taste_profile = dict()
 
         return taste_profile
 
@@ -260,6 +288,8 @@ class PageHunter:
         return
 
     def getLinks(self):
+        """Get all product links on a Page"""
+
         response = self.session.get(self.url)
         response.html.render(sleep=1, timeout=10)
 
@@ -271,6 +301,8 @@ class PageHunter:
         return links, response
 
     def getMaxPage(self, response):
+        """Find maximum reachable Page from present Page"""
+
         num_list = response.html.xpath('//*[@id="pagination"]/div/ul/li')
         num_list = list(map(lambda x: x.text, num_list))
         num_list = list(filter(lambda x: x.isdigit(), num_list))

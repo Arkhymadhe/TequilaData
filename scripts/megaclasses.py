@@ -2,12 +2,7 @@ import json
 import os
 import time
 
-import pandas as pd
 import numpy as np
-
-import requests
-from requests_html import HTMLSession
-from bs4 import BeautifulSoup
 
 from classes import PageHunter, Obtainer
 
@@ -31,6 +26,10 @@ class MegaObtainer:
         os.getcwd().replace("scripts", "secrets"), "megaObtainerArchive.json"
     )
 
+    INDEX_ARCHIVE = os.path.join(
+        os.getcwd().replace("scripts", "secrets"), "megaObtainerIndexes.json"
+    )
+
     tequila_index = 0
     review_index = 0
     community_index = 0
@@ -40,22 +39,62 @@ class MegaObtainer:
     COMMUNITY_DB = dict()
 
     def __init__(self, index=0, urls=None):
+        self.webHunter = WebHunter()
+
+        try:
+            with open(self.REVIEWER_STORE, "x") as f, open(
+                self.TEQUILA_STORE, "x"
+            ) as g, open(self.COMMUNITY_STORE, "x") as h:
+                pass
+        except:
+            pass
+
+        try:
+            with open(self.INDEX_ARCHIVE, "x") as f, open(
+                self.ARCHIVE_STORE, "x"
+            ) as g:
+                pass
+        except:
+            pass
+
         if urls is None:
             try:
                 self.loadLinks()
+                print(
+                    "Loaded links from storage!"
+                )
 
             except json.JSONDecodeError:
-                self.webHunter = WebHunter()
+                print(
+                    "Running WebHunter. Extracting required links..."
+                )
                 self.webHunter.run()
+
+                self.loadLinks()
+                print(
+                    "Loaded links from storage!"
+                )
         else:
             self.urls = urls
 
-        self.num_pages = len(self.urls)
-
-        self.rand_page = np.random.randint(low=0, high=self.num_pages)
-
         self.index = index
-        self.obtainer = Obtainer(None, None)
+
+        # Check for persisted indexes
+        try:
+            with open(self.INDEX_ARCHIVE, "r") as f:
+                indexes = json.load(f)
+
+                self.tequila_index = indexes['tequila_index'] + 1
+                self.review_index = indexes['review_index'] + 1
+                self.community_index = indexes['community_index'] + 1
+
+                f.close()
+        except (json.JSONDecodeError, FileNotFoundError):
+            pass
+
+        self.rand_page = np.random.choice(list(self.urls.keys()))
+        k1 = np.random.choice(list(self.urls[self.rand_page].keys()))
+        self.obtainer = Obtainer(self.urls[self.rand_page][k1], self.review_index)
 
         try:
             with open(self.ARCHIVE_STORE, "r") as f:
@@ -76,7 +115,7 @@ class MegaObtainer:
                 print(
                     f"Reduction of {100 * (size_now - size_later) / size_now}%"
                 )
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, FileNotFoundError):
             self.archive = dict()
 
         return
@@ -109,9 +148,9 @@ class MegaObtainer:
 
             try:
                 teq = json.load(g)
-                teq.update(self.TEQUILA_STORE)
+                teq.update(self.TEQUILA_DB)
             except json.JSONDecodeError:
-                teq = self.TEQUILA_STORE
+                teq = self.TEQUILA_DB
 
             try:
                 com = json.load(h)
@@ -141,27 +180,33 @@ class MegaObtainer:
     def crawlUrl(self):
         """Crawl through a URL and extract all needed data"""
 
-        num_pages = len(self.urls)
+        page_keys = list(self.urls.keys())
 
-        rand_page = np.random.randint(low=0, high=num_pages)
+        rand_page = np.random.choice(page_keys)
+        num_trial = 0
 
         # Present link and previous link selected must not be on pages that are too far apart.
         # This would not be similar to a human web-browsing pattern, and may lead to flagging
-        while abs(self.rand_page - rand_page) > 3:
-            rand_page = np.random.randint(low=0, high=num_pages)
-            self.archive.setdefault(rand_page, list())
+        while abs(int(self.rand_page) - int(rand_page)) > 3:
+            rand_page = np.random.choice(page_keys)
 
-            if not bool(self.urls[rand_page]):
-                del self.urls[rand_page]
+            if not bool(self.urls[str(rand_page)]):
+                del self.urls[str(rand_page)]
                 continue
 
+            num_trial += 1
+
+            if num_trial > 3:
+                break
+
+        self.archive.setdefault(str(rand_page), dict())
         # Store the randomly selected page from which link will be picked out
-        self.rand_page = rand_page
+        self.rand_page = str(rand_page)
 
         links = self.urls[self.rand_page]
         num_links = len(links)
 
-        link_index = np.random.randint(low=0, high=num_links)
+        link_index = np.random.choice(list(links.keys()))
 
         self.obtainer.rerun(links[link_index])
 
@@ -181,10 +226,13 @@ class MegaObtainer:
 
         # Eliminate scraped link from urls to be visited
         scraped_link = links.pop(link_index)
-        self.urls[rand_page] = links
+        self.urls[self.rand_page] = links
+
+        # Persist crawled indexes
+        self.persistIndexes()
 
         # Save it to archived links and persist
-        self.archive[rand_page].append(scraped_link)
+        self.archive[self.rand_page][link_index] = scraped_link
 
         self.persistArchive()
 
@@ -194,18 +242,41 @@ class MegaObtainer:
         """Persist archived URLS i.e., URLs already crawled through"""
 
         with open(self.ARCHIVE_STORE, "w") as f:
-            json.dump(self.archive, f)
+            json.dump(self.archive, f, indent=4)
             f.close()
 
         return
 
+    def persistIndexes(self):
+        indexes = dict()
+
+        indexes['tequila_index'] = self.tequila_index
+        indexes['review_index'] = self.review_index
+        indexes['community_index'] = self.community_index
+
+        with open(self.INDEX_ARCHIVE, "w") as f:
+            json.dump(indexes, f, indent=4)
+            f.close()
+        return
+
     def trimUrls(self):
         """Trim out redundant URLs"""
+        redundant_keys = list()
+        # REPLACE THIS LOOP WITH A COMPREHENSION ASAP!
+        #for k, v in self.urls.items():
+         #   for k_ in v:
+          #      if (k in self.archive) and (k_ in self.archive[k]):
+           #         redundant_keys.append((k, k_))
 
-        self.urls = {
-            key: list(set(urls) - set(self.archive[key]))
-            for key, urls in self.urls.items()
-        }
+        redundant_keys = [
+            (k, k_)
+            for k, v in self.urls.items()
+            for k_ in v
+            if (k in self.archive) and (k_ in self.archive[k])
+        ]
+
+        for k1, k2 in redundant_keys:
+            del(self.urls[k1][k2])
 
         return
 
@@ -261,7 +332,7 @@ class WebHunter(PageHunter):
 
                 f.close()
 
-            print("Proceeding from checkpoint...")
+            print("Checkpoint below found...")
 
         except json.JSONDecodeError:
             print("Begin fresh site crawl...")
@@ -269,7 +340,10 @@ class WebHunter(PageHunter):
                 self.index = idx
 
         print(
-            f"  Index    : {self.index}\n  Page Number: {self.index+1}\n  Max Page : {maxPage}\n"
+            f"  >>> Index       : {self.index}\n  >>> Page Number : {self.index+1}\n  >>> Max Page    : {maxPage}\n"
+        )
+        print(
+            "Crawling operations will resume from Checkpoint as required.\n"
         )
 
         self.url = self.pattern.format(self.index)
