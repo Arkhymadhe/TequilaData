@@ -30,7 +30,7 @@ class Obtainer:
         self.tequilaData = self.getTequilaDetails()
         self.communityProfile()
 
-        print(f"Site for {self.tequilaName} scraped!\n")
+        print(f"Site for `{self.tequilaName}` scraped!\n")
 
         return
 
@@ -90,8 +90,7 @@ class Obtainer:
         # The review attached to the rating
         review_text = review_html.find("p", class_="card-text", itemprop="description")
         review_text = review_text.text.replace("\n", "")
-        #review_text = review_text[:-1] if review_text[-1] == " " else review_text
-        review_text = review_text.rstrip() # This line or the one above
+        review_text = review_text.rstrip()
 
         # Does reviewer recommend this tequila?
         recom = review_html.find("span", class_="label").text.replace("\n", "")
@@ -161,18 +160,21 @@ class Obtainer:
     def getTequilaDetails(self):
         """Pick out tequila bottle characteristics."""
 
+        brand = self.base_html.find("div", class_="product-brand col-md-9 col-lg-12 col-xl-9").find("a").text.strip()
+        type_ = self.base_html.find("div", class_="product-type col-md-9 col-lg-12 col-xl-9").find("a").text.strip()
+
         table = self.base_html.findAll("div", itemprop="description")[0]
 
         ids = table.find_all("th", scope="row")
         ids = list(map(lambda x: x.text.replace("\n", "").replace(":", ""), ids))
-        ids = ["Tequila"] + ids
+        ids = ["Tequila", "Brand", "Type"] + ids
 
         vals = table.find_all("td")
         vals = list(map(lambda x: x.text.replace("\n", ""), vals))
-        vals = list(map(lambda x: x[:-1] if x[-1] == "," else x, vals))
+        vals = list(map(lambda x: x.rstrip(","), vals))
 
         # vals[0] = int(vals[0]) if vals[0].isdigit() else vals[0]
-        vals = [self.tequilaName] + vals
+        vals = [self.tequilaName, brand, type_] + vals
 
         drink_details = dict(zip(ids, vals))
 

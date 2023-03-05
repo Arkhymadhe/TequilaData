@@ -1,5 +1,6 @@
 notebooks/.ipynb_checkpoints/
 scripts/__pycache__/
+scripts/p.py
 secrets/*.json
 .idea
 data/*.xlsx

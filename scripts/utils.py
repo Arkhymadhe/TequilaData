@@ -1,4 +1,6 @@
 import random
+import os
+import json
 
 
 def getRandomHeaders():
@@ -17,3 +19,25 @@ def getRandomHeaders():
     }
 
     return headers
+
+
+def getArchiveSize():
+
+    PATH = os.path.join(
+        os.getcwd().replace("scripts", "secrets"), "megaObtainerArchive.json"
+    )
+
+    with open(PATH, "r") as f:
+        d = json.load(f)
+
+    size = sum(
+        [
+            len(v) for (k, v) in d.items()
+        ]
+    )
+
+    print(
+        f"Archive contains {size} links..."
+    )
+
+    return size

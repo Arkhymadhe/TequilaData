@@ -94,6 +94,7 @@ class MegaObtainer:
 
         self.rand_page = np.random.choice(list(self.urls.keys()))
         k1 = np.random.choice(list(self.urls[self.rand_page].keys()))
+
         self.obtainer = Obtainer(self.urls[self.rand_page][k1], self.review_index)
 
         try:
@@ -128,9 +129,6 @@ class MegaObtainer:
         self.TEQUILA_DB.update({self.tequila_index: self.obtainer.tequilaData})
 
         self.COMMUNITY_DB.update({self.community_index: self.obtainer.communityData})
-
-        self.tequila_index += 1
-        self.community_index += 1
 
         return
 
@@ -187,21 +185,24 @@ class MegaObtainer:
 
         # Present link and previous link selected must not be on pages that are too far apart.
         # This would not be similar to a human web-browsing pattern, and may lead to flagging
-        while abs(int(self.rand_page) - int(rand_page)) > 3:
+        while abs(int(self.rand_page) - int(rand_page)) > 4:
             rand_page = np.random.choice(page_keys)
 
-            if not bool(self.urls[str(rand_page)]):
-                del self.urls[str(rand_page)]
+            if not bool(self.urls[rand_page]):
+                del self.urls[rand_page]
+                print(
+                    f"Data extracted from all links on page {rand_page}!"
+                )
                 continue
 
             num_trial += 1
 
-            if num_trial > 3:
+            if (abs(int(self.rand_page) - int(rand_page)) < 4) or (num_trial > 4):
                 break
 
-        self.archive.setdefault(str(rand_page), dict())
+        self.archive.setdefault(rand_page, dict())
         # Store the randomly selected page from which link will be picked out
-        self.rand_page = str(rand_page)
+        self.rand_page = rand_page
 
         links = self.urls[self.rand_page]
         num_links = len(links)
@@ -220,16 +221,20 @@ class MegaObtainer:
 
         print("Reviews, tequila details, and community characterizations committed!\n")
 
-        self.persist()
-
-        print("Reviews, tequila details, and community characterizations persisted!\n")
-
         # Eliminate scraped link from urls to be visited
         scraped_link = links.pop(link_index)
         self.urls[self.rand_page] = links
 
-        # Persist crawled indexes
+        self.persist()
+
+        print("Reviews, tequila details, and community characterizations persisted!\n")
+
+        # Persist updated indexes
         self.persistIndexes()
+
+        # Update indexes
+        self.tequila_index += 1
+        self.community_index += 1
 
         # Save it to archived links and persist
         self.archive[self.rand_page][link_index] = scraped_link
@@ -251,7 +256,7 @@ class MegaObtainer:
         indexes = dict()
 
         indexes['tequila_index'] = self.tequila_index
-        indexes['review_index'] = self.review_index
+        indexes['review_index'] = self.obtainer.idx - 1
         indexes['community_index'] = self.community_index
 
         with open(self.INDEX_ARCHIVE, "w") as f:
@@ -261,12 +266,6 @@ class MegaObtainer:
 
     def trimUrls(self):
         """Trim out redundant URLs"""
-        redundant_keys = list()
-        # REPLACE THIS LOOP WITH A COMPREHENSION ASAP!
-        #for k, v in self.urls.items():
-         #   for k_ in v:
-          #      if (k in self.archive) and (k_ in self.archive[k]):
-           #         redundant_keys.append((k, k_))
 
         redundant_keys = [
             (k, k_)
@@ -460,7 +459,3 @@ class WebHunter(PageHunter):
         self.db.clear()
         return
 
-
-# hunter = WebHunter()
-
-# hunter.run()
