@@ -48,12 +48,16 @@ class Obtainer:
         return
 
     def setBaseHtml(self,):
+        """Set base_html property"""
+
         self.base_html = BeautifulSoup(
             requests.get(self.base_url, self.header).content, "html.parser"
         )
         return
 
     def setTequilaName(self, ):
+        """Set tequilaName property"""
+
         self.tequilaName = self.base_html.findAll("h1", itemprop="name")
         self.tequilaName = self.tequilaName[0].text.replace("\n", "")
         return
@@ -167,14 +171,14 @@ class Obtainer:
 
         ids = table.find_all("th", scope="row")
         ids = list(map(lambda x: x.text.replace("\n", "").replace(":", ""), ids))
-        ids = ["Tequila", "Brand", "Type"] + ids
+        ids = ["Tequila", "Brand", "Type"] + ids + ["Link"]
 
         vals = table.find_all("td")
         vals = list(map(lambda x: x.text.replace("\n", ""), vals))
         vals = list(map(lambda x: x.rstrip(","), vals))
 
         # vals[0] = int(vals[0]) if vals[0].isdigit() else vals[0]
-        vals = [self.tequilaName, brand, type_] + vals
+        vals = [self.tequilaName, brand, type_] + vals + [self.base_url]
 
         drink_details = dict(zip(ids, vals))
 

@@ -4615,5 +4615,40 @@
         "Flavors_Earth": 1,
         "Flavors_Nutmeg": 1,
         "Flavors_Baking Spice": 1
+    },
+    "233": {
+        "Tequila": "Tequila Gran Atributo A\u00f1ejo",
+        "Aromas_Oak": 2,
+        "Aromas_Fruity": 1,
+        "Aromas_Vanilla": 1,
+        "Aromas_Dried Fruit": 1,
+        "Aromas_Barrel Spice": 1,
+        "Flavors_Oak": 2,
+        "Flavors_Fruity": 1,
+        "Flavors_Vanilla": 1,
+        "Flavors_Dried Fruit": 1,
+        "Flavors_Barrel Spice": 1
+    },
+    "234": {
+        "Tequila": "Azteca Azul Tequila Plata",
+        "Aromas_Alcohol": 5,
+        "Aromas_Agave (cooked)": 3,
+        "Aromas_Minerals": 3,
+        "Aromas_Citrus": 2,
+        "Aromas_Pepper (black)": 1,
+        "Aromas_Smoke": 1,
+        "Aromas_White Pepper": 1,
+        "Aromas_Vanilla": 1,
+        "Flavors_Alcohol": 4,
+        "Flavors_Citrus": 3,
+        "Flavors_Pepper (black)": 3,
+        "Flavors_Pear": 2,
+        "Flavors_Agave (cooked)": 2,
+        "Flavors_Chlorine": 1,
+        "Flavors_Nuts (Roasted)": 1,
+        "Flavors_Acetone": 1,
+        "Flavors_Minerals": 1,
+        "Flavors_Lemon": 1,
+        "Flavors_Vanilla": 1
     }
 }
