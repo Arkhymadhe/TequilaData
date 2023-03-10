@@ -186,7 +186,7 @@ class Obtainer:
             split_nom = drink_details["NOM"].split(",")
 
             drink_details["NOM"] = (
-                int(split_nom[0]) if split_nom[0].isdigit() else split_nom[0]
+                int(split_nom[0].strip(" ")) if split_nom[0].strip(" ").isdigit() else split_nom[0].strip(" ")
             )
 
             drink_details["Previous_NOM"] = split_nom[1].replace(")", "").split(":")[1]
@@ -197,6 +197,10 @@ class Obtainer:
             )
         else:
             drink_details["Previous_NOM"] = None
+            drink_details["NOM"] = (
+                int(drink_details["NOM"].strip(" ")) if drink_details["NOM"].strip(" ").isdigit() else drink_details["NOM"].strip(" ")
+            )
+
 
         num_ratings = self.base_html.find("span", itemprop="reviewCount").text.strip()
         num_ratings = int(num_ratings) if num_ratings.isdigit() else num_ratings

@@ -333,7 +333,7 @@ class WebHunter(PageHunter):
 
             print("Checkpoint below found...")
 
-        except json.JSONDecodeError:
+        except (FileNotFoundError, json.JSONDecodeError):
             print("Begin fresh site crawl...")
             if idx is not None:
                 self.index = idx
