@@ -103,19 +103,20 @@ class MegaObtainer:
                 f.close()
 
             size_now = self.numUrls()
-            print(f"Present number of URLs to scrape through: {size_now}")
+            print(f"\nOriginal number of URLs to scrape through: {size_now}")
 
             self.trimUrls()
             size_later = self.numUrls()
 
             if size_now != size_later:
                 print(
-                    f"New number of URLs to scrape through: {size_later}."
+                    f"Net number of URLs to scrape through: {size_later}"
                 )
 
                 print(
-                    f"Reduction of {100 * (size_now - size_later) / size_now}%"
+                    f"\nSize reduction of {100 * (size_now - size_later) / size_now}%"
                 )
+
         except (json.JSONDecodeError, FileNotFoundError):
             self.archive = dict()
 
@@ -178,6 +179,12 @@ class MegaObtainer:
     def crawlUrl(self):
         """Crawl through a URL and extract all needed data"""
 
+        # Trim redundant URLs first
+        self.trimUrls()
+
+        if not self.urls:
+            return
+
         page_keys = list(self.urls.keys())
 
         rand_page = np.random.choice(page_keys)
@@ -187,13 +194,6 @@ class MegaObtainer:
         # This would not be similar to a human web-browsing pattern, and may lead to flagging
         while abs(int(self.rand_page) - int(rand_page)) > 4:
             rand_page = np.random.choice(page_keys)
-
-            if not bool(self.urls[rand_page]):
-                del self.urls[rand_page]
-                print(
-                    f"Data extracted from all links on page {rand_page}!"
-                )
-                continue
 
             num_trial += 1
 
@@ -223,7 +223,17 @@ class MegaObtainer:
 
         # Eliminate scraped link from urls to be visited
         scraped_link = links.pop(link_index)
-        self.urls[self.rand_page] = links
+
+        # If all links on rand_page are exhausted...
+        if not bool(links):
+            # ...delete the rand_page key from our dictionary...
+            del self.urls[self.rand_page]
+
+            print(
+                f"Data extracted from all links on page {self.rand_page}!"
+            )
+        else:
+            self.urls[self.rand_page] = links
 
         self.persist()
 
@@ -266,12 +276,13 @@ class MegaObtainer:
 
     def trimUrls(self):
         """Trim out redundant URLs"""
+        self.urls = {k : v for (k, v) in self.urls.items() if bool(v)}
 
         redundant_keys = [
             (k, k_)
             for k, v in self.urls.items()
             for k_ in v
-            if (k in self.archive) and (k_ in self.archive[k])
+            if ((k in self.archive) and (k_ in self.archive[k]))
         ]
 
         for k1, k2 in redundant_keys:
@@ -287,6 +298,8 @@ class MegaObtainer:
     def run(self):
         while bool(self.urls):
             self.crawlUrl()
+
+        print("All URLs scraped successfully!")
         return
 
     def loadLinks(self):
