@@ -15,8 +15,7 @@ class Obtainer:
         self.base_url = base_url
         self.header = getRandomHeaders()
 
-        self.base_html = None
-        self.tequilaName = None
+        self.tequilaName, self.base_html = None, None
 
         self.setBaseHtml()
         self.setTequilaName()
