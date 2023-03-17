@@ -10,8 +10,8 @@ from utils import getRandomHeaders
 
 
 class Obtainer:
-    def __init__(self, base_url, idx=None):
-        self.idx = idx if idx else 0
+    def __init__(self, base_url, review_index=None):
+        self.review_index = review_index if review_index else 0
         self.base_url = base_url
         self.header = getRandomHeaders()
 
@@ -121,9 +121,9 @@ class Obtainer:
 
         review_dicts = [self.getReviewerData(el, name) for el in review_html]
 
-        data = dict(zip(range(self.idx, self.idx + len(review_dicts)), review_dicts))
+        data = dict(zip(range(self.review_index, self.review_index + len(review_dicts)), review_dicts))
 
-        return data, self.idx + len(review_dicts)
+        return data, self.review_index + len(review_dicts)
 
     def tequilaReviews(
         self,
@@ -148,7 +148,7 @@ class Obtainer:
             if soup.text == "\n":
                 break
 
-            scraped, self.idx = self.allReviews(soup, self.tequilaName)
+            scraped, self.review_index = self.allReviews(soup, self.tequilaName)
 
             print(f"Extracted review page {p}...\n")
             final_reviews.update(scraped)
@@ -200,7 +200,6 @@ class Obtainer:
             drink_details["NOM"] = (
                 int(drink_details["NOM"].strip(" ")) if drink_details["NOM"].strip(" ").isdigit() else drink_details["NOM"].strip(" ")
             )
-
 
         num_ratings = self.base_html.find("span", itemprop="reviewCount").text.strip()
         num_ratings = int(num_ratings) if num_ratings.isdigit() else num_ratings
