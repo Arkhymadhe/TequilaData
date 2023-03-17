@@ -266,7 +266,7 @@ class MegaObtainer:
         indexes = dict()
 
         indexes['tequila_index'] = self.tequila_index
-        indexes['review_index'] = self.obtainer.idx - 1
+        indexes['review_index'] = self.obtainer.review_index - 1
         indexes['community_index'] = self.community_index
 
         with open(self.INDEX_ARCHIVE, "w") as f:
@@ -322,7 +322,7 @@ class MegaObtainer:
 class WebHunter(PageHunter):
     """Mega class which uses [an] instance[s] of the PageHunter[s] class to extract links from multiple pages."""
 
-    index = 0
+    page_index = 0
     db = dict()
     page_num = 0
 
@@ -339,7 +339,7 @@ class WebHunter(PageHunter):
             with open(self.SECRET, "r") as f:
                 params = json.load(f)
 
-                self.index = params["idx"]
+                self.page_index = params["idx"]
                 maxPage = params["maxPage"]
 
                 f.close()
@@ -349,16 +349,16 @@ class WebHunter(PageHunter):
         except (FileNotFoundError, json.JSONDecodeError):
             print("Begin fresh site crawl...")
             if idx is not None:
-                self.index = idx
+                self.page_index = idx
 
         print(
-            f"  >>> Index       : {self.index}\n  >>> Page Number : {self.index+1}\n  >>> Max Page    : {maxPage}\n"
+            f"  >>> Index       : {self.page_index}\n  >>> Page Number : {self.page_index + 1}\n  >>> Max Page    : {maxPage}\n"
         )
         print(
             "Crawling operations will resume from Checkpoint as required.\n"
         )
 
-        self.url = self.pattern.format(self.index)
+        self.setUrl()
 
         super(WebHunter, self).__init__(self.url, maxPage)
 
@@ -369,8 +369,16 @@ class WebHunter(PageHunter):
             self.commit()
 
             print(
-                f"Extracted and committed page {self.index + 1}/{self.pageHunter.maxPage}...\n"
+                f"Extracted and committed page {self.page_index + 1}/{self.pageHunter.maxPage}...\n"
             )
+
+        return
+
+
+    def setUrl(self, page_index=None):
+        self.url = self.pattern.format(
+            page_index if page_index else self.page_index
+        )
 
         return
 
@@ -379,7 +387,7 @@ class WebHunter(PageHunter):
 
         set_max = False
 
-        for i in range(self.index + 1, self.pageHunter.maxPage):
+        for i in range(self.page_index + 1, self.pageHunter.maxPage):
             print(
                 f"Attempting extraction for page {i+1}/{self.pageHunter.maxPage}...\n"
             )
@@ -393,7 +401,7 @@ class WebHunter(PageHunter):
             self.page_num = i
 
             if self.pageHunter.cache_empty():
-                self.index = i
+                self.page_index = i
                 break
 
             self.commit()
@@ -406,7 +414,7 @@ class WebHunter(PageHunter):
 
             print("Awakening...\n")
 
-        self.index = i
+        self.page_index = i
         self.persist()
         return
 
@@ -414,7 +422,7 @@ class WebHunter(PageHunter):
         while True:
             self.getSite()
 
-            if self.index + 1 == self.pageHunter.maxPage:
+            if self.page_index + 1 == self.pageHunter.maxPage:
                 break
 
         print("Entire site scraped!")
@@ -456,7 +464,7 @@ class WebHunter(PageHunter):
         # Persist recent hyperparams
         with open(self.SECRET, "w") as g:
             json.dump(
-                {"idx": self.index, "maxPage": self.pageHunter.maxPage}, g, indent=4
+                {"idx": self.page_index, "maxPage": self.pageHunter.maxPage}, g, indent=4
             )
 
         self.clear()
